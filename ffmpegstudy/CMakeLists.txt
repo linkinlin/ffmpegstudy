@@ -13,7 +13,7 @@ include_directories(${FFMPEG_INCLUDE_DIR})
 link_directories(${FFMPEG_LIB_DIR})
 
 # 将源代码添加到此项目的可执行文件。
-add_executable (ffmpegstudy  "ffmpegstudy.h" "rtsptortmp.cpp")
+add_executable (ffmpegstudy  "ffmpegstudy.h" "filtering_video.c")
 
 #添加链接库
 target_link_libraries(${PROJECT_NAME} avutil avformat avcodec avdevice avfilter postproc swscale swresample)

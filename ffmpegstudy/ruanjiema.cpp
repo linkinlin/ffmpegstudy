@@ -21,62 +21,62 @@ using std::ios_base;
 int main() {
     AVFormatContext* ic = nullptr;
     //rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4
-    const char* in_path = "C:\\Users\\casair\\Downloads\\ke.mp4"; //ÊäÈëÎÄ¼ş
-    const char* out_path = "C:\\Users\\casair\\Desktop\\rjm-out.yuv"; //Êä³öÎÄ¼ş
+    const char* in_path = "C:\\Users\\casair\\Downloads\\ke.mp4"; //è¾“å…¥æ–‡ä»¶
+    const char* out_path = "C:\\Users\\casair\\Desktop\\rjm-out.yuv"; //è¾“å‡ºæ–‡ä»¶
     int ret;
 
     ret = avformat_open_input(&ic, in_path, NULL, NULL);
     if (ret < 0) {
-        cout << "´ò¿ªÎÄ¼şÊ§°Ü" << endl;
+        cout << "æ‰“å¼€æ–‡ä»¶å¤±è´¥" << endl;
         return ret;
     }
-    cout << "´ò¿ªÎÄ¼ş³É¹¦: " << in_path << endl;
-    //av_dump_format(ic, 0, inputFile, 0); //´òÓ¡Ã½ÌåĞÅÏ¢
+    cout << "æ‰“å¼€æ–‡ä»¶æˆåŠŸ: " << in_path << endl;
+    //av_dump_format(ic, 0, inputFile, 0); //æ‰“å°åª’ä½“ä¿¡æ¯
 
-    ret = avformat_find_stream_info(ic, NULL); //²éÑ¯Á÷ĞÅÏ¢
+    ret = avformat_find_stream_info(ic, NULL); //æŸ¥è¯¢æµä¿¡æ¯
     if (ret < 0) {
         avformat_free_context(ic);
-        cout << "²éÑ¯Á÷ĞÅÏ¢Ê§°Ü" << endl;
+        cout << "æŸ¥è¯¢æµä¿¡æ¯å¤±è´¥" << endl;
         return ret;
     }
-    cout << "²éÑ¯Á÷ĞÅÏ¢³É¹¦...." << endl;
+    cout << "æŸ¥è¯¢æµä¿¡æ¯æˆåŠŸ...." << endl;
 
     const AVCodec* codec;
-    ret = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0); //»ñÈ¡ÊÓÆµÁ÷Ë÷Òı
+    ret = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0); //è·å–è§†é¢‘æµç´¢å¼•
     if (ret < 0) {
-        cout << "»ñÈ¡ÊÓÆµÁ÷Ë÷ÒıÊ§°Ü" << endl;
+        cout << "è·å–è§†é¢‘æµç´¢å¼•å¤±è´¥" << endl;
         return ret;
     }
-    cout << "»ñÈ¡ÊÓÆµÁ÷Ë÷Òı³É¹¦:" << ret << endl;
+    cout << "è·å–è§†é¢‘æµç´¢å¼•æˆåŠŸ:" << ret << endl;
     int videoStreamIndex = ret;
     AVStream* videoStream = ic->streams[ret];
-    cout << "ÊÓÆµ±àÂë:" << avcodec_get_name(videoStream->codecpar->codec_id) << endl; //Êä³öÊÓÆµÁ÷±àÂëÃû³Æ
-    cout << "ÊÓÆµ³ß´ç:" << videoStream->codecpar->width << "x" << videoStream->codecpar->height << endl;
+    cout << "è§†é¢‘ç¼–ç :" << avcodec_get_name(videoStream->codecpar->codec_id) << endl; //è¾“å‡ºè§†é¢‘æµç¼–ç åç§°
+    cout << "è§†é¢‘å°ºå¯¸:" << videoStream->codecpar->width << "x" << videoStream->codecpar->height << endl;
 
-    //const AVCodec* codec = avcodec_find_decoder(videoStream->codecpar->codec_id); //»ñÈ¡½âÂëÆ÷
+    //const AVCodec* codec = avcodec_find_decoder(videoStream->codecpar->codec_id); //è·å–è§£ç å™¨
 
-    AVCodecContext* avctx = avcodec_alloc_context3(codec);//·ÖÅäAVCodecContext¿Õ¼ä
-    ret = avcodec_parameters_to_context(avctx, videoStream->codecpar); //¿½±´½âÂëÆ÷
+    AVCodecContext* avctx = avcodec_alloc_context3(codec);//åˆ†é…AVCodecContextç©ºé—´
+    ret = avcodec_parameters_to_context(avctx, videoStream->codecpar); //æ‹·è´è§£ç å™¨
     if (ret < 0) {
-        cout << "¿½±´½âÂëÆ÷Ê§°Ü" << endl;
+        cout << "æ‹·è´è§£ç å™¨å¤±è´¥" << endl;
         return ret;
     }
 
     ret = avcodec_open2(avctx, codec, NULL);
     if (ret < 0) {
-        cout << "´ò¿ª½âÂëÆ÷Ê§°Ü" << endl;
+        cout << "æ‰“å¼€è§£ç å™¨å¤±è´¥" << endl;
         return ret;
     }
-    cout << "´ò¿ª½âÂëÆ÷³É¹¦..." << endl;
+    cout << "æ‰“å¼€è§£ç å™¨æˆåŠŸ..." << endl;
 
-    AVPacket* pkt = av_packet_alloc(); //·ÖÅä°ü
+    AVPacket* pkt = av_packet_alloc(); //åˆ†é…åŒ…
     if (!pkt) {
-        cout << "av_packet_allocÊ§°Ü" << endl;
+        cout << "av_packet_allocå¤±è´¥" << endl;
         return 1;
     }
-    AVFrame* frame = av_frame_alloc(); //·ÖÅäÖ¡
+    AVFrame* frame = av_frame_alloc(); //åˆ†é…å¸§
     if (!frame) {
-        cout << "av_frame_allocÊ§°Ü" << endl;
+        cout << "av_frame_allocå¤±è´¥" << endl;
         return 1;
     }
 
@@ -89,7 +89,7 @@ int main() {
     while (true && frame_count < frame_count_max) {
         ret = av_read_frame(ic, pkt);
         if (ret < 0) {
-            cout << "av_read_frameÊ§°Ü" << endl;
+            cout << "av_read_frameå¤±è´¥" << endl;
             break;
         }
 
@@ -97,24 +97,24 @@ int main() {
             continue;
         }
 
-        if (avcodec_send_packet(avctx, pkt) != 0) { //½«¶ÁÈ¡µÄ°ü·¢ËÍµ½½âÂëÆ÷ÉÏÏÂÎÄ£¬½øĞĞ½âÂë
-            cout << "avcodec_send_packet´íÎó" << endl;
+        if (avcodec_send_packet(avctx, pkt) != 0) { //å°†è¯»å–çš„åŒ…å‘é€åˆ°è§£ç å™¨ä¸Šä¸‹æ–‡ï¼Œè¿›è¡Œè§£ç 
+            cout << "avcodec_send_packeté”™è¯¯" << endl;
             break;
         }
-        while (avcodec_receive_frame(avctx, frame) == 0) { //²»¶ÏÑ­»·£¬È¡³öavcodec_send_packet½âÂëºóµÄÖ¡Êı¾İ
+        while (avcodec_receive_frame(avctx, frame) == 0) { //ä¸æ–­å¾ªç¯ï¼Œå–å‡ºavcodec_send_packetè§£ç åçš„å¸§æ•°æ®
             frame_count++;
-            cout << "½âÂëµ½µÚ" << avctx->frame_number << "Ö¡" << endl;
+            cout << "è§£ç åˆ°ç¬¬" << avctx->frame_number << "å¸§" << endl;
 
             int size = av_image_get_buffer_size((AVPixelFormat)frame->format, frame->width, frame->height, 1);
-            uint8_t* buffer = (uint8_t*)av_malloc(size); //ÉêÇëÒ»¿éÄÚ´æ
+            uint8_t* buffer = (uint8_t*)av_malloc(size); //ç”³è¯·ä¸€å—å†…å­˜
             av_image_copy_to_buffer(buffer, size,
             	(const uint8_t* const*)frame->data,
             	(const int*)frame->linesize, (AVPixelFormat)frame->format,
-            	frame->width, frame->height, 1); //½«Êı¾İ¿½±´µ½bufferÖĞ
+            	frame->width, frame->height, 1); //å°†æ•°æ®æ‹·è´åˆ°bufferä¸­
 
-            fwrite(buffer, 1, size, pFile);//½«bufferÊı¾İĞ´ÈëÎÄ¼şÖĞÈ¥
+            fwrite(buffer, 1, size, pFile);//å°†bufferæ•°æ®å†™å…¥æ–‡ä»¶ä¸­å»
 
-            av_freep(&buffer);//Çå³ıbuffer
+            av_freep(&buffer);//æ¸…é™¤buffer
         }
     }
 

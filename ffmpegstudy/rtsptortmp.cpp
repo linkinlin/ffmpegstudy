@@ -19,21 +19,21 @@ using std::ofstream;
 using std::ios_base;
 
 int main() {
-    av_log_set_level(AV_LOG_INFO); //ÉèÖÃÈÕÖ¾¼¶±ğ
+    av_log_set_level(AV_LOG_INFO); //è®¾ç½®æ—¥å¿—çº§åˆ«
 
     AVFormatContext* ic = nullptr;
     int ret;
-    const char* in_path = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4"; //ÊäÈëÎÄ¼ş
-    const char* out_path = "C:\\Users\\casair\\Desktop\\rtsp-out.mp4"; //Êä³öÎÄ¼ş
+    const char* in_path = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4"; //è¾“å…¥æ–‡ä»¶
+    const char* out_path = "C:\\Users\\casair\\Desktop\\rtsp-out.mp4"; //è¾“å‡ºæ–‡ä»¶
     avformat_network_init();
-    //rtsp²ÎÊıÅäÖÃ
+    //rtspå‚æ•°é…ç½®
     AVDictionary* options = NULL;
     //http://www.ffmpeg.org/ffmpeg-all.html#rtsp
-    av_dict_set(&options, "rtsp_transport", "udp", 0); //ÉèÖÃrtsp´«ÊäĞ­Òé udp tcp
-    av_dict_set(&options, "max_delay", "500", 0);//ÉèÖÃ×î´óÑÓ³Ù(500000=0.5s)
-    av_dict_set(&options, "fflags", "nobuffer", 0);//È¡Ïû»º´æ£¬¼õÉÙÑÓ³Ù
-    av_dict_set(&options, "buffer_size", "1024000", 0); //ÉèÖÃ»º´æ,¼õÉÙ»¨ÆÁ
-    av_dict_set(&options, "timeout", "3000000", 0);//ÉèÖÃ³¬Ê±Ê±¼ä(3000000=3s)
+    av_dict_set(&options, "rtsp_transport", "udp", 0); //è®¾ç½®rtspä¼ è¾“åè®® udp tcp
+    av_dict_set(&options, "max_delay", "500", 0);//è®¾ç½®æœ€å¤§å»¶è¿Ÿ(500000=0.5s)
+    av_dict_set(&options, "fflags", "nobuffer", 0);//å–æ¶ˆç¼“å­˜ï¼Œå‡å°‘å»¶è¿Ÿ
+    av_dict_set(&options, "buffer_size", "1024000", 0); //è®¾ç½®ç¼“å­˜,å‡å°‘èŠ±å±
+    av_dict_set(&options, "timeout", "3000000", 0);//è®¾ç½®è¶…æ—¶æ—¶é—´(3000000=3s)
 
     ret = avformat_open_input(&ic, in_path, NULL, &options);
     if (ret < 0) {
@@ -41,9 +41,9 @@ int main() {
         return ret;
     }
     av_log(ic, AV_LOG_INFO, "open file[%s]success\n", in_path);
-    av_dump_format(ic, 0, in_path, 0); //´òÓ¡Ã½ÌåĞÅÏ¢
+    av_dump_format(ic, 0, in_path, 0); //æ‰“å°åª’ä½“ä¿¡æ¯
 
-    ret = avformat_find_stream_info(ic, NULL); //²éÑ¯Á÷ĞÅÏ¢
+    ret = avformat_find_stream_info(ic, NULL); //æŸ¥è¯¢æµä¿¡æ¯
     if (ret < 0) {
         avformat_free_context(ic);
         av_log(ic, AV_LOG_ERROR, "avformat_find_stream_info fail\n");
@@ -51,20 +51,20 @@ int main() {
     }
 
     const AVCodec* codec;
-    ret = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0); //»ñÈ¡ÊÓÆµÁ÷Ë÷Òı
+    ret = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0); //è·å–è§†é¢‘æµç´¢å¼•
     if (ret < 0) {
         av_log(ic, AV_LOG_ERROR, "av_find_best_stream fail\n");
         return ret;
     }
     int videoStreamIndex = ret;
     AVStream* videoStream = ic->streams[ret];
-    //cout << "ÊÓÆµ±àÂë:" << avcodec_get_name(videoStream->codecpar->codec_id) << endl; //Êä³öÊÓÆµÁ÷±àÂëÃû³Æ
-    //cout << "ÊÓÆµ³ß´ç:" << videoStream->codecpar->width << "x" << videoStream->codecpar->height << endl;
+    //cout << "è§†é¢‘ç¼–ç :" << avcodec_get_name(videoStream->codecpar->codec_id) << endl; //è¾“å‡ºè§†é¢‘æµç¼–ç åç§°
+    //cout << "è§†é¢‘å°ºå¯¸:" << videoStream->codecpar->width << "x" << videoStream->codecpar->height << endl;
 
-    //const AVCodec* codec = avcodec_find_decoder(videoStream->codecpar->codec_id); //»ñÈ¡½âÂëÆ÷
+    //const AVCodec* codec = avcodec_find_decoder(videoStream->codecpar->codec_id); //è·å–è§£ç å™¨
 
-    AVCodecContext* avctx = avcodec_alloc_context3(codec);//·ÖÅäAVCodecContext¿Õ¼ä
-    ret = avcodec_parameters_to_context(avctx, videoStream->codecpar); //¿½±´½âÂëÆ÷
+    AVCodecContext* avctx = avcodec_alloc_context3(codec);//åˆ†é…AVCodecContextç©ºé—´
+    ret = avcodec_parameters_to_context(avctx, videoStream->codecpar); //æ‹·è´è§£ç å™¨
     if (ret < 0) {
         av_log(ic, AV_LOG_ERROR, "avcodec_parameters_to_context fail\n");
         return ret;
@@ -76,12 +76,12 @@ int main() {
         return ret;
     }
 
-    AVPacket* pkt = av_packet_alloc(); //·ÖÅä°ü
+    AVPacket* pkt = av_packet_alloc(); //åˆ†é…åŒ…
     if (!pkt) {
         av_log(ic, AV_LOG_ERROR, "av_packet_alloc fail\n");
         return 1;
     }
-    AVFrame* frame = av_frame_alloc(); //·ÖÅäÖ¡
+    AVFrame* frame = av_frame_alloc(); //åˆ†é…å¸§
     if (!frame) {
         av_log(ic, AV_LOG_ERROR, "av_frame_alloc fail\n");
         return 1;
@@ -89,15 +89,15 @@ int main() {
 
 
 
-    const AVOutputFormat* ofmt = NULL; //Êä³ö¸ñÊ½
-    AVFormatContext* oc = NULL; //Êä³öÉÏÏÂÎÄ
+    const AVOutputFormat* ofmt = NULL; //è¾“å‡ºæ ¼å¼
+    AVFormatContext* oc = NULL; //è¾“å‡ºä¸Šä¸‹æ–‡
     avformat_alloc_output_context2(&oc, NULL, NULL, out_path);
     if (!oc) {
         av_log(ic, AV_LOG_ERROR, "avformat_alloc_output_context2 fail\n");
         return 1;
     }
 
-    ofmt = oc->oformat; //ÉèÖÃÊä³ö¸ñÊ½
+    ofmt = oc->oformat; //è®¾ç½®è¾“å‡ºæ ¼å¼
 
     int out_stream_index = 0;
     int stream_map_size = ic->nb_streams;
@@ -131,7 +131,7 @@ int main() {
 
         outStream->codecpar->codec_tag = 0;
     }
-    av_dump_format(oc, 0, out_path, 1); //´òÓ¡Ã½ÌåĞÅÏ¢
+    av_dump_format(oc, 0, out_path, 1); //æ‰“å°åª’ä½“ä¿¡æ¯
 
 
     if (!(ofmt->flags & AVFMT_NOFILE)) {
@@ -156,14 +156,14 @@ int main() {
             av_log(ic, AV_LOG_ERROR, "av_read_frame fail\n");
             break;
         }
-        //Èç¹û°üµÄË÷Òı³¬¹ımap »òÕß ¶ÔÓ¦µÄÁ÷Îª-1£¬ Ìø¹ı´¦Àí
+        //å¦‚æœåŒ…çš„ç´¢å¼•è¶…è¿‡map æˆ–è€… å¯¹åº”çš„æµä¸º-1ï¼Œ è·³è¿‡å¤„ç†
         if (pkt->stream_index >= stream_map_size || in_out_stream_index_map[pkt->stream_index] < 0) {
             av_packet_unref(pkt);
             continue;
         }
 
-        inStream = ic->streams[pkt->stream_index]; //¸ù¾İ°ü»ñÈ¡¶ÔÓ¦ÊäÈëÁ÷
-        pkt->stream_index = in_out_stream_index_map[pkt->stream_index]; //ÖØĞ´stream_index
+        inStream = ic->streams[pkt->stream_index]; //æ ¹æ®åŒ…è·å–å¯¹åº”è¾“å…¥æµ
+        pkt->stream_index = in_out_stream_index_map[pkt->stream_index]; //é‡å†™stream_index
         outStream = oc->streams[pkt->stream_index];
 
         //pkt->pts = av_rescale_q_rnd(pkt->pts, inStream->time_base, outStream->time_base, AVRounding(AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
